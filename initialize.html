@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initialize Demo Data - AgrilinkEthiopia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .status-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .status-box.success {
+            border-left-color: #27ae60;
+            background: #d4edda;
+        }
+        .status-box.error {
+            border-left-color: #e74c3c;
+            background: #f8d7da;
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .credentials {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .credentials h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        .credential-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        .credential-item strong {
+            color: #856404;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Initialize Demo Data</h1>
+        <p class="subtitle">Set up demo users and products for AgrilinkEthiopia</p>
+        
+        <div id="statusBox" class="status-box">
+            <div class="status-item">
+                <span class="icon">⏳</span>
+                <span>Ready to initialize...</span>
+            </div>
+        </div>
+        
+        <button id="initBtn" class="btn" onclick="initializeData()">Initialize Demo Data</button>
+        
+        <div id="credentials" class="credentials" style="display: none;">
+            <h3>📋 Demo Account Credentials</h3>
+            <div class="credential-item">
+                <strong>Admin:</strong><br>
+                Email: admin@agrilinkethiopia.et<br>
+                Password: admin123
+            </div>
+            <div class="credential-item">
+                <strong>Farmer 1:</strong><br>
+                Email: abebe@example.com<br>
+                Password: password123
+            </div>
+            <div class="credential-item">
+                <strong>Farmer 2:</strong><br>
+                Email: tigist@example.com<br>
+                Password: password123
+            </div>
+            <div class="credential-item">
+                <strong>Buyer:</strong><br>
+                Email: buyer@example.com<br>
+                Password: password123
+            </div>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> This will create demo data in your browser's localStorage. 
+            Data will be cleared if you clear your browser cache.
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="index.html" style="color: #3498db; text-decoration: none;">← Back to Home</a>
+        </div>
+    </div>
+
+    <script src="js/products-data.js"></script>
+    <script>
+        function updateStatus(message, type = 'info') {
+            const statusBox = document.getElementById('statusBox');
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : '⏳';
+            
+            statusBox.className = `status-box ${type}`;
+            statusBox.innerHTML = `
+                <div class="status-item">
+                    <span class="icon">${icon}</span>
+                    <span>${message}</span>
+                </div>
+            `;
+        }
+
+        function initializeData() {
+            const btn = document.getElementById('initBtn');
+            btn.disabled = true;
+            btn.textContent = 'Initializing...';
+            
+            try {
+                // Demo users
+                const demoUsers = [
+                    {
+                        id: 'admin1',
+                        type: 'admin',
+                        name: 'Admin User',
+                        email: 'admin@agrilinkethiopia.et',
+                        phone: '+251911000000',
+                        location: 'addis-ababa',
+                        password: 'admin123',
+                        approved: true,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'farmer1',
+                        type: 'farmer',
+                        name: 'Abebe Kebede',
+                        email: 'abebe@example.com',
+                        phone: '+251911234567',
+                        location: 'addis-ababa',
+                        password: 'password123',
+                        approved: true,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'farmer2',
+                        type: 'farmer',
+                        name: 'Tigist Haile',
+                        email: 'tigist@example.com',
+                        phone: '+251922345678',
+                        location: 'mekelle',
+                        password: 'password123',
+                        approved: true,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'buyer1',
+                        type: 'buyer',
+                        name: 'Restaurant Owner',
+                        email: 'buyer@example.com',
+                        phone: '+251912345678',
+                        location: 'addis-ababa',
+                        password: 'password123',
+                        approved: true,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                
+                // Save users
+                localStorage.setItem('agrilinkUsers', JSON.stringify(demoUsers));
+                updateStatus('✅ Demo users created successfully!', 'success');
+                
+                // Generate and save products
+                if (typeof generateAllProducts === 'function') {
+                    const demoProducts = generateAllProducts();
+                    localStorage.setItem('agrilinkProducts', JSON.stringify(demoProducts));
+                    updateStatus(`✅ Demo users and ${demoProducts.length} products created successfully!`, 'success');
+                } else {
+                    updateStatus('⚠️ Products data not loaded. Users created but products failed.', 'error');
+                }
+                
+                // Show credentials
+                document.getElementById('credentials').style.display = 'block';
+                
+                // Update button
+                btn.textContent = 'Data Initialized!';
+                btn.className = 'btn btn-success';
+                btn.onclick = function() {
+                    window.location.href = 'index.html';
+                };
+                
+            } catch (error) {
+                updateStatus('❌ Error: ' + error.message, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Try Again';
+            }
+        }
+
+        // Check if data already exists
+        window.addEventListener('DOMContentLoaded', function() {
+            const existingUsers = JSON.parse(localStorage.getItem('agrilinkUsers') || '[]');
+            const existingProducts = JSON.parse(localStorage.getItem('agrilinkProducts') || '[]');
+            
+            if (existingUsers.length > 0 || existingProducts.length > 0) {
+                updateStatus(`ℹ️ Data already exists: ${existingUsers.length} users, ${existingProducts.length} products`, 'info');
+                document.getElementById('credentials').style.display = 'block';
+                document.getElementById('initBtn').textContent = 'Re-initialize Data';
+            }
+        });
+    </script>
+</body>
+</html>
+
