@@ -1,9 +1,10 @@
 // AgrilinkEthiopia - Buyer Dashboard JavaScript
 
-let currentUser = null;
-let myOrders = [];
-let myWishlist = [];
-let allProducts = [];
+// Use var instead of let to avoid redeclaration errors when minified
+var currentUser = null;
+var myOrders = [];
+var myWishlist = [];
+var allProducts = [];
 
 // Initialize the buyer dashboard
 document.addEventListener('DOMContentLoaded', function() {
@@ -924,6 +925,6 @@ const additionalCSS = `
     }
 `;
 
-const style = document.createElement('style');
+var style = document.createElement('style');
 style.textContent = additionalCSS;
 document.head.appendChild(style);

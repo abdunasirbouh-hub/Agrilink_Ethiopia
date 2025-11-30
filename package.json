@@ -10,7 +10,7 @@
     "build": "npm run minify-css && npm run minify-js && npm run optimize-images",
     "minify-css": "npx clean-css-cli -o css/style.min.css css/style.css",
     "minify-js": "npx terser js/*.js -o js/script.min.js --compress --mangle",
-    "optimize-images": "npx imagemin images/* --out-dir=dist/images",
+    "optimize-images": "node optimize-images.js",
     "deploy": "npm run build && npm run upload-to-s3",
     "upload-to-s3": "aws s3 sync . s3://agrilinkethiopia --delete --exclude '.git/*' --exclude 'node_modules/*' --exclude 'README.md' --exclude 'package*.json'",
     "test": "npm run validate-html && npm run validate-css && npm run lint-js",
@@ -57,7 +57,7 @@
     "html-validate": "^8.2.0",
     "stylelint": "^15.10.1",
     "eslint": "^8.45.0",
-    "bundle-analyzer": "^0.1.0"
+   "webpack-bundle-analyzer": "^4.10.0"
   },
   "engines": {
     "node": ">=14.0.0",

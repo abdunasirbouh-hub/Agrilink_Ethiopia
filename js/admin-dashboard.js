@@ -1,10 +1,11 @@
 // AgrilinkEthiopia - Admin Dashboard JavaScript
 
-let currentUser = null;
-let allUsers = [];
-let allProducts = [];
-let allOrders = [];
-let filteredData = {
+// Use var instead of let to avoid redeclaration errors when minified
+var currentUser = null;
+var allUsers = [];
+var allProducts = [];
+var allOrders = [];
+var filteredData = {
     farmers: [],
     buyers: [],
     products: [],

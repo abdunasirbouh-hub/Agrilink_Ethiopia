@@ -1,9 +1,10 @@
 // AgrilinkEthiopia - Farmer Dashboard JavaScript
 
-let currentUser = null;
-let myProducts = [];
-let myOrders = [];
-let uploadedImages = [];
+// Use var instead of let to avoid redeclaration errors when minified
+var currentUser = null;
+var myProducts = [];
+var myOrders = [];
+var uploadedImages = [];
 
 // Initialize the farmer dashboard
 document.addEventListener('DOMContentLoaded', function() {
@@ -845,6 +846,6 @@ const orderDetailsCSS = `
     }
 `;
 
-const style = document.createElement('style');
+var style = document.createElement('style');
 style.textContent = orderDetailsCSS;
 document.head.appendChild(style);

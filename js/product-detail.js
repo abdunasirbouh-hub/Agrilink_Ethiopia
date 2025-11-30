@@ -1,9 +1,10 @@
 // AgrilinkEthiopia - Product Detail Page JavaScript
 
-let currentProduct = null;
-let currentUser = null;
-let allProducts = [];
-let similarProducts = [];
+// Use var instead of let to avoid redeclaration errors when minified
+var currentProduct = null;
+var currentUser = null;
+var allProducts = [];
+var similarProducts = [];
 
 // Initialize the product detail page
 document.addEventListener('DOMContentLoaded', function() {
@@ -763,6 +764,6 @@ const contactModalCSS = `
     }
 `;
 
-const style = document.createElement('style');
+var style = document.createElement('style');
 style.textContent = contactModalCSS;
 document.head.appendChild(style);

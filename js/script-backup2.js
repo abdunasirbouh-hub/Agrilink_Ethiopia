@@ -1,11 +1,11 @@
 // AgrilinkEthiopia - Agricultural Marketplace JavaScript
 
-// Global variables
-let currentUser = null;
-let products = [];
-let filteredProducts = [];
-let currentPage = 1;
-const productsPerPage = 12;
+// Global variables - use var to avoid redeclaration errors when minified
+var currentUser = null;
+var products = [];
+var filteredProducts = [];
+var currentPage = 1;
+var productsPerPage = 12;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -917,7 +917,7 @@ function lazyLoadImages() {
 }
 
 // Add CSS animations
-const style = document.createElement('style');
+var style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
         from {
