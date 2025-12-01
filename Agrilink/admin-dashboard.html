@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - AgrilinkEthiopia</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhanced-colors.css">
+    <link rel="stylesheet" href="css/animated-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico">
+    <style>
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #34495e;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card.primary {
+            border-left: 4px solid #3498db;
+        }
+        
+        .stat-card.success {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .stat-card.warning {
+            border-left: 4px solid #f39c12;
+        }
+        
+        .stat-card.danger {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .stat-card .stat-value {
+            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .section-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            color: #2c3e50;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+        }
+        
+        .data-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e1e8ed;
+            white-space: nowrap;
+        }
+        
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e1e8ed;
+            vertical-align: middle;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .user-email {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-suspended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-approve {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-approve:hover {
+            background: #229954;
+        }
+        
+        .btn-reject {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-reject:hover {
+            background: #c0392b;
+        }
+        
+        .btn-suspend {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-suspend:hover {
+            background: #e67e22;
+        }
+        
+        .btn-view {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #2980b9;
+        }
+        
+        .btn-delete {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #7f8c8d;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-bar select,
+        .filter-bar input {
+            padding: 8px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        .search-box {
+            display: flex;
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            border-radius: 8px 0 0 8px;
+            border-right: none;
+        }
+        
+        .search-box button {
+            padding: 8px 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .quick-action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quick-action-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-action-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .pending-alert {
+            background: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .modal-content {
+            max-width: 600px;
+        }
+        
+        .user-details-modal {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+        
+        .quick-action-icon img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h3>Admin Panel</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">AgrilinkEthiopia</p>
+                </a>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="#dashboard" class="active" onclick="showSection('dashboard')">
+                        <img src="images/icon-growth.png" class="nav-icon" alt="Dashboard"> Dashboard
+                    </a></li>
+                    <li><a href="#farmers" onclick="showSection('farmers')">
+                        <img src="images/icon-farmer.png" class="nav-icon" alt="Farmers"> Farmers Management
+                    </a></li>
+                    <li><a href="#buyers" onclick="showSection('buyers')">
+                        <img src="images/icon-cart.png" class="nav-icon" alt="Buyers"> Buyers Management
+                    </a></li>
+                    <li><a href="#products" onclick="showSection('products')">
+                        <img src="images/icon-products.png" class="nav-icon" alt="Products"> Products Management
+                    </a></li>
+                    <li><a href="#orders" onclick="showSection('orders')">
+                        <img src="images/icon-orders.png" class="nav-icon" alt="Orders"> Orders Management
+                    </a></li>
+                    <li><a href="#reports" onclick="showSection('reports')">
+                        <img src="images/icon-growth.png" class="nav-icon" alt="Reports"> Reports & Analytics
+                    </a></li>
+                    <li><a href="#settings" onclick="showSection('settings')">
+                        <img src="images/icon-settings.png" class="nav-icon" alt="Settings"> Settings
+                    </a></li>
+                    <li><a href="#" onclick="logout()">
+                        <img src="images/icon-logout.png" class="nav-icon" alt="Logout"> Logout
+                    </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage the AgrilinkEthiopia platform and oversee all activities</p>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="dashboard-section">
+                <!-- Pending Alerts -->
+                <div class="pending-alert" id="pendingAlert" style="display: none;">
+                    <strong>Pending Approvals:</strong> You have <span id="pendingCount">0</span> farmers waiting for approval.
+                    <button class="btn btn-small btn-approve" onclick="showSection('farmers')">Review Now</button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-cards">
+                    <div class="stat-card primary">
+                        <h3>Total Users</h3>
+                        <div class="stat-value" id="totalUsers">0</div>
+                    </div>
+                    <div class="stat-card success">
+                        <h3>Active Farmers</h3>
+                        <div class="stat-value" id="activeFarmers">0</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <h3>Pending Approvals</h3>
+                        <div class="stat-value" id="pendingApprovals">0</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <h3>Total Products</h3>
+                        <div class="stat-value" id="totalProducts">0</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="quick-action-card" onclick="showSection('farmers')">
+                        <div class="quick-action-icon"><img src="images/icon-farmer.png" alt="Farmers"></div>
+                        <div class="quick-action-title">Approve Farmers</div>
+                        <div class="quick-action-count" id="pendingFarmersCount">0 pending</div>
+                    </div>
+                    <div class="quick-action-card" onclick="showSection('products')">
+                        <div class="quick-action-icon"><img src="images/icon-products.png" alt="Products"></div>
+                        <div class="quick-action-title">Review Products</div>
+                        <div class="quick-action-count" id="pendingProductsCount">0 pending</div>
+                    </div>
+                    <div class="quick-action-card" onclick="showSection('orders')">
+                        <div class="quick-action-icon"><img src="images/icon-orders.png" alt="Orders"></div>
+                        <div class="quick-action-title">Monitor Orders</div>
+                        <div class="quick-action-count" id="activeOrdersCount">0 active</div>
+                    </div>
+                    <div class="quick-action-card" onclick="showSection('reports')">
+                        <div class="quick-action-icon"><img src="images/icon-growth.png" alt="Reports"></div>
+                        <div class="quick-action-title">View Reports</div>
+                        <div class="quick-action-count">Analytics</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Recent Activity</h2>
+                        <button class="btn btn-outline" onclick="showSection('reports')">View All</button>
+                    </div>
+                    <div id="recentActivity">
+                        <!-- Recent activity will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Farmers Management Section -->
+            <section id="farmers-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Farmers Management</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <input type="text" id="farmerSearch" placeholder="Search farmers..." onkeyup="searchFarmers()">
+                            <button onclick="searchFarmers()">Search</button>
+                        </div>
+                        <select id="farmerStatusFilter" onchange="filterFarmers()">
+                            <option value="">All Status</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                        <select id="farmerLocationFilter" onchange="filterFarmers()">
+                            <option value="">All Locations</option>
+                            <option value="addis-ababa">Addis Ababa</option>
+                            <option value="dire-dawa">Dire Dawa</option>
+                            <option value="mekelle">Mekelle</option>
+                            <option value="gondar">Gondar</option>
+                            <option value="bahirdar">Bahirdar</option>
+                            <option value="hawassa">Hawassa</option>
+                        </select>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Farmer</th>
+                                    <th>Contact</th>
+                                    <th>Location</th>
+                                    <th>Products</th>
+                                    <th>Join Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="farmersTableBody">
+                                <!-- Farmers will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Buyers Management Section -->
+            <section id="buyers-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Buyers Management</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <input type="text" id="buyerSearch" placeholder="Search buyers..." onkeyup="searchBuyers()">
+                            <button onclick="searchBuyers()">🔍</button>
+                        </div>
+                        <select id="buyerStatusFilter" onchange="filterBuyers()">
+                            <option value="">All Status</option>
+                            <option value="approved">Active</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Buyer</th>
+                                    <th>Contact</th>
+                                    <th>Location</th>
+                                    <th>Orders</th>
+                                    <th>Join Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="buyersTableBody">
+                                <!-- Buyers will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Management Section -->
+            <section id="products-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Products Management</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <input type="text" id="productSearch" placeholder="Search products..." onkeyup="searchProducts()">
+                            <button onclick="searchProducts()">🔍</button>
+                        </div>
+                        <select id="productStatusFilter" onchange="filterProducts()">
+                            <option value="">All Status</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                        <select id="productCategoryFilter" onchange="filterProducts()">
+                            <option value="">All Categories</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                            <option value="grains">Grains</option>
+                            <option value="spices">Spices</option>
+                            <option value="legumes">Legumes</option>
+                            <option value="dairy">Dairy</option>
+                        </select>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Farmer</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Posted Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- Products will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Management Section -->
+            <section id="orders-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>📦 Orders Management</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <input type="text" id="orderSearch" placeholder="Search orders..." onkeyup="searchOrders()">
+                            <button onclick="searchOrders()">🔍</button>
+                        </div>
+                        <select id="orderStatusFilter" onchange="filterOrders()">
+                            <option value="">All Status</option>
+                            <option value="new">New</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Buyer</th>
+                                    <th>Farmer</th>
+                                    <th>Total Price</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <!-- Orders will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>⚙️ Platform Settings</h2>
+                    </div>
+                    <div class="settings-tabs">
+                        <button class="tab-btn active" onclick="showSettingsTab('general')">🏠 General</button>
+                        <button class="tab-btn" onclick="showSettingsTab('approval')">✅ Approval Settings</button>
+                        <button class="tab-btn" onclick="showSettingsTab('payment')">💳 Payment</button>
+                        <button class="tab-btn" onclick="showSettingsTab('notification')">🔔 Notifications</button>
+                    </div>
+                    <div id="settingsContent">
+                        <!-- Settings content will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/setup-demo-data.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

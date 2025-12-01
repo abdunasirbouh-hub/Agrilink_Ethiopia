@@ -1,0 +1,52 @@
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            <h2>Create Your Account</h2>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>I am a:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="userType" value="farmer" required>
+                            <span>Farmer (Sell Products)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="userType" value="buyer" required>
+                            <span>Buyer (Purchase Products)</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupLocation">Location</label>
+                    <select id="signupLocation" required>
+                        <option value="">Select your region</option>
+                        <option value="addis-ababa">Addis Ababa</option>
+                        <option value="dire-dawa">Dire Dawa</option>
+                        <option value="mekelle">Mekelle</option>
+                        <option value="gondar">Gondar</option>
+                        <option value="bahirdar">Bahirdar</option>
+                        <option value="hawassa">Hawassa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - AgrilinkEthiopia</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/logo.svg">
+    <style>
+        .product-detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .product-images {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+        }
+        
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .thumbnail-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .thumbnail {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .thumbnail.active,
+        .thumbnail:hover {
+            border-color: #3498db;
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .product-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .product-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+        
+        .product-quantity {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .product-description {
+            margin-bottom: 2rem;
+        }
+        
+        .product-description h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .product-description p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .product-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-check {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .farmer-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .farmer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .farmer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #27ae60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .farmer-details h3 {
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .farmer-rating {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .farmer-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .contact-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .contact-option {
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e1e8ed;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .contact-option:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+        
+        .contact-icon {
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-icon img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        
+        .similar-products {
+            margin-top: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .similar-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .similar-product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .similar-product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .similar-product-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .similar-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .similar-product-info {
+            padding: 1.5rem;
+        }
+        
+        .similar-product-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .similar-product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+        
+        .similar-product-farmer {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .product-specs {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .spec-value {
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .product-images {
+                position: static;
+            }
+            
+            .main-image {
+                height: 300px;
+            }
+            
+            .product-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .farmer-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit;">
+                        <img src="images/logo.svg" alt="AgrilinkEthiopia" class="logo">
+                        <span class="brand-name">AgrilinkEthiopia</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#products" class="nav-link">Products</a></li>
+                    <li><a href="index.html#categories" class="nav-link">Categories</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <button class="btn btn-outline" onclick="showLoginModal()">Login</button>
+                    <button class="btn btn-primary" onclick="showSignupModal()">Sign Up</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Product Detail Content -->
+    <div class="product-detail-container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>›</span>
+            <a href="index.html#products">Products</a>
+            <span>›</span>
+            <span id="breadcrumbCategory">Category</span>
+            <span>›</span>
+            <span id="breadcrumbProduct">Product Name</span>
+        </nav>
+
+        <!-- Product Detail -->
+        <div class="product-detail">
+            <!-- Product Images -->
+            <div class="product-images">
+                <div class="main-image">
+                    <img id="mainProductImage" src="" alt="Product">
+                </div>
+                <div class="thumbnail-gallery" id="thumbnailGallery">
+                    <!-- Thumbnails will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Product Information -->
+            <div class="product-info">
+                <h1 class="product-title" id="productTitle">Product Name</h1>
+                
+                <div class="product-meta">
+                    <div class="meta-item" id="categoryBadge">
+                        <span>🌾</span>
+                        <span>Category</span>
+                    </div>
+                    <div class="meta-item" id="organicBadge" style="display: none;">
+                        <span>🌿</span>
+                        <span>Organic</span>
+                    </div>
+                    <div class="meta-item" id="certifiedBadge" style="display: none;">
+                        <span>✅</span>
+                        <span>Certified</span>
+                    </div>
+                    <div class="meta-item" id="statusBadge">
+                        <span>✓</span>
+                        <span>Available</span>
+                    </div>
+                </div>
+
+                <div class="product-price" id="productPrice">ETB 0</div>
+                <div class="product-quantity" id="productQuantity">Available: 0 kg</div>
+                <div class="product-location">
+                    <img src="images/icon-location.png" alt="Location" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                    <span id="productLocation">Location</span>
+                </div>
+
+                <!-- Product Description -->
+                <div class="product-description">
+                    <h3>Product Description</h3>
+                    <p id="productDescription">Product description will appear here.</p>
+                </div>
+
+                <!-- Product Features -->
+                <div class="product-features">
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span>Fresh from farm</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span>Quality assured</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span>Best prices</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span>Direct from farmer</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary btn-large" onclick="contactFarmer()">Contact Farmer</button>
+                    <button class="btn btn-secondary btn-large" onclick="makeOffer()">Make an Offer</button>
+                </div>
+
+                <!-- Farmer Information -->
+                <div class="farmer-info">
+                    <div class="farmer-header">
+                        <div class="farmer-avatar" id="farmerAvatar">F</div>
+                        <div class="farmer-details">
+                            <h3 id="farmerName">Farmer Name</h3>
+                            <div class="farmer-rating">⭐ <span id="farmerRating">4.8</span> Rating</div>
+                        </div>
+                    </div>
+                    <div class="farmer-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="farmerProducts">0</div>
+                            <div class="stat-label">Products</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="farmerOrders">0</div>
+                            <div class="stat-label">Orders</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="farmerYears">0</div>
+                            <div class="stat-label">Years Active</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Specifications -->
+        <div class="product-specs">
+            <h3>Product Specifications</h3>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="spec-label">Category:</span>
+                    <span class="spec-value" id="specCategory">-</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Available Quantity:</span>
+                    <span class="spec-value" id="specQuantity">-</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Price per kg:</span>
+                    <span class="spec-value" id="specPrice">-</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Location:</span>
+                    <span class="spec-value" id="specLocation">-</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Posted Date:</span>
+                    <span class="spec-value" id="specPostedDate">-</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Harvest Date:</span>
+                    <span class="spec-value" id="specHarvestDate">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Options -->
+        <div class="farmer-info">
+            <h3>Get in Touch</h3>
+            <div class="contact-options">
+                <div class="contact-option" onclick="makePhoneCall()">
+                    <div class="contact-icon"><img src="images/icon-phone.png" alt="Call"></div>
+                    <div>Call Now</div>
+                    <div style="font-size: 0.9rem; color: #666;">Direct call to farmer</div>
+                </div>
+                <div class="contact-option" onclick="sendWhatsApp()">
+                    <div class="contact-icon"><img src="images/icon-whatsapp.png" alt="WhatsApp"></div>
+                    <div>WhatsApp</div>
+                    <div style="font-size: 0.9rem; color: #666;">Chat instantly</div>
+                </div>
+                <div class="contact-option" onclick="sendEmail()">
+                    <div class="contact-icon"><img src="images/icon-email.png" alt="Email"></div>
+                    <div>Email</div>
+                    <div style="font-size: 0.9rem; color: #666;">Send detailed inquiry</div>
+                </div>
+                <div class="contact-option" onclick="scheduleVisit()">
+                    <div class="contact-icon"><img src="images/icon-calendar.png" alt="Visit"></div>
+                    <div>Schedule Visit</div>
+                    <div style="font-size: 0.9rem; color: #666;">Visit the farm</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Options -->
+        <div class="farmer-info">
+            <h3>Payment Options</h3>
+            <div class="payment-methods" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                <div style="padding: 0.5rem 1rem; background: white; border: 1px solid #27ae60; border-radius: 20px;">
+                    📱 TeleBirr
+                </div>
+                <div style="padding: 0.5rem 1rem; background: white; border: 1px solid #27ae60; border-radius: 20px;">
+                    📱 CBE Birr
+                </div>
+                <div style="padding: 0.5rem 1rem; background: white; border: 1px solid #27ae60; border-radius: 20px;">
+                    💵 Cash on Delivery
+                </div>
+                <div style="padding: 0.5rem 1rem; background: white; border: 1px solid #27ae60; border-radius: 20px;">
+                    🏦 Bank Transfer
+                </div>
+            </div>
+        </div>
+
+        <!-- Similar Products -->
+        <div class="similar-products">
+            <h2 class="section-title">Similar Products</h2>
+            <div class="similar-products-grid" id="similarProductsGrid">
+                <!-- Similar products will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login to Contact Farmer</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                <p class="form-footer">Don't have an account? <a href="#" onclick="switchToSignup()">Sign Up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            <h2>Create Your Account</h2>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>I am a:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="userType" value="buyer" required>
+                            <span>Buyer (Purchase Products)</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupLocation">Location</label>
+                    <select id="signupLocation" required>
+                        <option value="">Select your region</option>
+                        <option value="addis-ababa">Addis Ababa</option>
+                        <option value="dire-dawa">Dire Dawa</option>
+                        <option value="mekelle">Mekelle</option>
+                        <option value="gondar">Gondar</option>
+                        <option value="bahirdar">Bahirdar</option>
+                        <option value="hawassa">Hawassa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                <p class="form-footer">Already have an account? <a href="#" onclick="switchToLogin()">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/setup-demo-data.js"></script>
+    <script src="js/product-detail.js"></script>
+</body>
+</html>

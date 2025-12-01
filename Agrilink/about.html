@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - AgrilinkEthiopia</title>
+    <meta name="description" content="Learn about AgrilinkEthiopia's mission to connect Ethiopian farmers with buyers for sustainable agriculture.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index-new.css">
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c23 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+        
+        .about-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .about-hero p {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .about-section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+        
+        .about-section h2 {
+            color: #2d5016;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+        
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .about-text h3 {
+            color: #2d5016;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .about-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4a7c23;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .value-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            border-top: 4px solid #4a7c23;
+        }
+        
+        .value-icon {
+            margin-bottom: 20px;
+        }
+        
+        .value-icon img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+        }
+        
+        .value-card h3 {
+            color: #2d5016;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .value-card p {
+            color: #666;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="images/logo.svg" alt="AgrilinkEthiopia" class="nav-logo">
+                <span class="brand-name">AgrilinkEthiopia</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#categories" class="nav-link">Categories</a></li>
+                <li><a href="index.html#products" class="nav-link">Products</a></li>
+                <li><a href="about.html" class="nav-link active">About</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <h1>About AgrilinkEthiopia</h1>
+        <p>Empowering Ethiopian farmers and revolutionizing agricultural trade through innovative digital solutions</p>
+    </section>
+
+    <!-- Our Story -->
+    <section class="about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <h3>🌱 Our Story</h3>
+                <p>Founded in 2024, AgrilinkEthiopia was born from a simple observation: Ethiopian farmers produce exceptional agricultural products, but struggle to connect with the right buyers at fair prices. We saw an opportunity to bridge this gap using technology.</p>
+                <p style="margin-top: 20px;">Today, we're proud to serve thousands of farmers and buyers across Ethiopia, creating a more transparent, efficient, and equitable agricultural marketplace.</p>
+            </div>
+            <div class="about-image">
+                <img src="images/vegetable-market.jpg" alt="Ethiopian farmers">
+            </div>
+        </div>
+
+        <div class="about-content" style="flex-direction: row-reverse;">
+            <div class="about-text">
+                <h2>Our Mission</h2>
+                <p><strong>To empower Ethiopian farmers</strong> by providing them with direct access to markets, fair pricing, and the tools they need to grow their businesses sustainably.</p>
+                <p style="margin-top: 20px;">We believe that by connecting farmers directly with buyers, we can:</p>
+                <ul style="margin-top: 15px; line-height: 2;">
+                    <li>Eliminate unnecessary middlemen</li>
+                    <li>Ensure fair prices for farmers</li>
+                    <li>Provide fresh, quality products to buyers</li>
+                    <li>Promote sustainable agricultural practices</li>
+                    <li>Strengthen Ethiopia's agricultural economy</li>
+                </ul>
+            </div>
+            <div class="about-image">
+                <img src="images/coffee-plant.jpg" alt="Coffee harvest">
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="about-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 20px; margin: 0;">
+        <h2>Our Impact</h2>
+        <div class="stats-grid" style="max-width: 1200px; margin: 0 auto;">
+            <div class="stat-card">
+                <div class="stat-number">1000+</div>
+                <div class="stat-label">Registered Farmers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Active Buyers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">76</div>
+                <div class="stat-label">Product Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5000+</div>
+                <div class="stat-label">Successful Transactions</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision -->
+    <section class="about-section">
+        <h1><center>Our Vision</center></h1><br>
+        <div class="about-text" style="text-align: center; max-width: 900px; margin: 0 auto;">
+            <p style="font-size: 1.2rem;">To become Ethiopia's leading agricultural marketplace, transforming how farmers and buyers connect, and setting new standards for transparency, efficiency, and fairness in agricultural trade.</p>
+            <p style="margin-top: 30px;">We envision a future where every Ethiopian farmer has access to digital tools, market information, and direct buyer relationships that enable them to thrive and contribute to national food security.</p>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="about-section">
+        <h2>Our Core Values</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon"><img src="images/icon-farmer.png" alt="Trust"></div>
+                <h3>Trust & Transparency</h3>
+                <p>We build trust through verified listings, transparent pricing, and honest communication between all parties.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><img src="images/icon-growth.png" alt="Sustainability"></div>
+                <h3>Sustainability</h3>
+                <p>We promote sustainable farming practices that protect the environment for future generations.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><img src="images/icon-products.png" alt="Empowerment"></div>
+                <h3>Farmer Empowerment</h3>
+                <p>We put farmers first, ensuring they have the tools, knowledge, and market access to succeed.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><img src="images/icon-settings.png" alt="Innovation"></div>
+                <h3>Innovation</h3>
+                <p>We continuously improve our platform using the latest technology to serve our community better.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><img src="images/icon-user.png" alt="Community"></div>
+                <h3>Community</h3>
+                <p>We build strong relationships and foster collaboration within Ethiopia's agricultural sector.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><img src="images/icon-orders.png" alt="Fair Trade"></div>
+                <h3>Fair Trade</h3>
+                <p>We ensure equitable transactions where both farmers and buyers benefit from every deal.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="about-section" style="text-align: center;">
+        <h2>Join Our Mission</h2>
+        <p style="font-size: 1.2rem; color: #666; margin-bottom: 40px;">Whether you're a farmer looking to expand your market or a buyer seeking quality Ethiopian produce, we're here to help you succeed.</p>
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <a href="index.html#products"><button class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">Explore Products</button></a>
+            <a href="contact.html"><button class="btn btn-outline" style="padding: 15px 40px; font-size: 1.1rem;">Contact Us</button></a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AgrilinkEthiopia</h3>
+                <p>Connecting Ethiopian farmers with buyers for a sustainable agricultural future.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="index.html#products">Products</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p><img src="images/icon-email.png" alt="Email" style="width: 20px; vertical-align: middle; margin-right: 5px;"> info@agrilinkethiopia.et</p>
+                <p><img src="images/icon-phone.png" alt="Phone" style="width: 20px; vertical-align: middle; margin-right: 5px;"> +251 11 XXX XXXX</p>
+                <p><img src="images/icon-location.png" alt="Location" style="width: 20px; vertical-align: middle; margin-right: 5px;"> Addis Ababa, Ethiopia</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 AgrilinkEthiopia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

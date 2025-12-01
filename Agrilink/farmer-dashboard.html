@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard - AgrilinkEthiopia</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhanced-colors.css">
+    <link rel="stylesheet" href="css/animated-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico">
+    <style>
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #34495e;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .welcome-section h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-section p {
+            color: #666;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #27ae60;
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .stat-card .stat-value {
+            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .section-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            color: #2c3e50;
+        }
+        
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .products-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e1e8ed;
+        }
+        
+        .products-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .product-thumbnail {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .add-product-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3498db;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .image-upload-area {
+            border: 2px dashed #e1e8ed;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload-area:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .uploaded-images {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .uploaded-image {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        
+        .uploaded-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .orders-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e1e8ed;
+        }
+        
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .order-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .order-status.new {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .order-status.processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .order-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .order-status.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .add-product-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h3>AgrilinkEthiopia</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">Farmer Portal</p>
+                </a>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="#dashboard" class="active" onclick="showSection('dashboard')">
+                        <img src="images/icon-growth.png" class="nav-icon" alt="Dashboard"> Dashboard
+                    </a></li>
+                    <li><a href="#products" onclick="showSection('products')">
+                        <img src="images/icon-products.png" class="nav-icon" alt="My Products"> My Products
+                    </a></li>
+                    <li><a href="#add-product" onclick="showSection('add-product')">
+                        <img src="images/icon-growth.png" class="nav-icon" alt="Add Product"> Add Product
+                    </a></li>
+                    <li><a href="#orders" onclick="showSection('orders')">
+                        <img src="images/icon-orders.png" class="nav-icon" alt="Orders"> Orders
+                    </a></li>
+                    <li><a href="#messages" onclick="showSection('messages')">
+                        <img src="images/icon-message.png" class="nav-icon" alt="Messages"> Messages
+                    </a></li>
+                    <li><a href="#analytics" onclick="showSection('analytics')">
+                        <img src="images/icon-growth.png" class="nav-icon" alt="Analytics"> Analytics
+                    </a></li>
+                    <li><a href="#profile" onclick="showSection('profile')">
+                        <img src="images/icon-user.png" class="nav-icon" alt="Profile"> Profile
+                    </a></li>
+                    <li><a href="#" onclick="logout()">
+                        <img src="images/icon-logout.png" class="nav-icon" alt="Logout"> Logout
+                    </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Welcome back, <span id="farmerName">Farmer</span>!</h1>
+                    <p>Manage your farm products and track your sales performance</p>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="dashboard-section">
+                <!-- Stats Cards -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3>Total Products</h3>
+                        <div class="stat-value" id="totalProducts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Listings</h3>
+                        <div class="stat-value" id="activeListings">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Orders</h3>
+                        <div class="stat-value" id="totalOrders">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Monthly Revenue</h3>
+                        <div class="stat-value" id="monthlyRevenue">ETB 0</div>
+                    </div>
+                </div>
+
+                <!-- Recent Products -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Recent Products</h2>
+                        <button class="btn btn-outline" onclick="showSection('products')">View All</button>
+                    </div>
+                    <div id="recentProducts">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Recent Orders</h2>
+                        <button class="btn btn-outline" onclick="showSection('orders')">View All</button>
+                    </div>
+                    <div id="recentOrders">
+                        <!-- Orders will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section id="products-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>My Products</h2>
+                        <button class="btn btn-primary" onclick="showSection('add-product')">Add New Product</button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="productStatusFilter" onchange="filterProducts()">
+                            <option value="">All Status</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                        <select id="productCategoryFilter" onchange="filterProducts()">
+                            <option value="">All Categories</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                            <option value="grains">Grains</option>
+                            <option value="spices">Spices</option>
+                            <option value="legumes">Legumes</option>
+                            <option value="dairy">Dairy</option>
+                            <option value="coffee">Coffee</option>
+                            <option value="tubers">Tubers</option>
+                            <option value="oilseeds">Oilseeds</option>
+                            <option value="pulses">Pulses</option>
+                        </select>
+                    </div>
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Posted Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Add Product Section -->
+            <section id="add-product-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Add New Product</h2>
+                    </div>
+                    <form id="addProductForm" onsubmit="handleAddProduct(event)">
+                        <div class="add-product-form">
+                            <div class="form-group">
+                                <label for="productTitle">Product Title *</label>
+                                <input type="text" id="productTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productCategory">Category *</label>
+                                <select id="productCategory" required>
+                                    <option value="">Select category</option>
+                                    <option value="vegetables">Vegetables</option>
+                                    <option value="fruits">Fruits</option>
+                                    <option value="grains">Grains</option>
+                                    <option value="spices">Spices</option>
+                                    <option value="legumes">Legumes</option>
+                                    <option value="dairy">Dairy</option>
+                                    <option value="coffee">Coffee</option>
+                                    <option value="tubers">Tubers</option>
+                                    <option value="oilseeds">Oilseeds</option>
+                                    <option value="pulses">Pulses</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productPrice">Price per kg (ETB) *</label>
+                                <input type="number" id="productPrice" min="0" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productQuantity">Available Quantity *</label>
+                                <input type="text" id="productQuantity" placeholder="e.g., 500 kg" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productLocation">Location *</label>
+                                <select id="productLocation" required>
+                                    <option value="">Select location</option>
+                                    <option value="addis-ababa">Addis Ababa</option>
+                                    <option value="dire-dawa">Dire Dawa</option>
+                                    <option value="mekelle">Mekelle</option>
+                                    <option value="gondar">Gondar</option>
+                                    <option value="bahirdar">Bahirdar</option>
+                                    <option value="hawassa">Hawassa</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productHarvestDate">Harvest Date</label>
+                                <input type="date" id="productHarvestDate">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="productDescription">Description *</label>
+                                <textarea id="productDescription" placeholder="Describe your product, quality, farming methods, etc." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="productOrganic"> Organic Product
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="productCertified"> Certified Product
+                                </label>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Product Images *</label>
+                                <div class="image-upload-area" onclick="document.getElementById('productImages').click()">
+                                    <div>📷 Click to upload images</div>
+                                    <p style="font-size: 0.9rem; color: #07006e; margin-top: 0.5rem;">
+                                        Upload at least 3 clear images of your product
+                                    </p>
+                                    <input type="file" id="productImages" multiple accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                                </div>
+                                <div class="uploaded-images" id="uploadedImages"></div>
+                            </div>
+                            <div class="form-group full-width">
+                                <button type="submit" class="btn btn-primary">Submit for Approval</button>
+                                <button type="button" class="btn btn-outline" onclick="resetAddProductForm()">Clear Form</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Orders</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="orderStatusFilter" onchange="filterOrders()">
+                            <option value="">All Status</option>
+                            <option value="new">New</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Buyer</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>📧 Messages</h2>
+                    </div>
+                    <div style="padding: 2rem; text-align: center; color: #666;">
+                        <img src="images/icon-message.png" alt="Messages" style="width: 80px; height: 80px; margin-bottom: 1rem; opacity: 0.5;">
+                        <h3>No Messages Yet</h3>
+                        <p>When buyers contact you about your products, their messages will appear here.</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem;">💡 Tip: Respond quickly to increase your sales!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>📊 Analytics & Insights</h2>
+                    </div>
+                    
+                    <!-- Performance Overview -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">Performance Overview</h3>
+                        <div class="stats-cards">
+                            <div class="stat-card">
+                                <h3>Total Views</h3>
+                                <div class="stat-value">Coming Soon</div>
+                                <p style="color: #666; font-size: 0.9rem;">Product page views</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Inquiries</h3>
+                                <div class="stat-value">Coming Soon</div>
+                                <p style="color: #666; font-size: 0.9rem;">Customer contacts</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Conversion Rate</h3>
+                                <div class="stat-value">Coming Soon</div>
+                                <p style="color: #666; font-size: 0.9rem;">Views to orders</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Performance -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">Top Performing Products</h3>
+                        <div style="background: #f8f9fa; padding: 2rem; border-radius: 8px; text-align: center;">
+                            <p style="color: #666;">📈 Detailed analytics will be available here</p>
+                            <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">Track which products get the most views and orders</p>
+                        </div>
+                    </div>
+
+                    <!-- Insights -->
+                    <div>
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">📌 Quick Tips</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 1rem; background: #e8f5e8; margin-bottom: 0.5rem; border-radius: 8px;">
+                                ✓ Upload high-quality product images to increase views
+                            </li>
+                            <li style="padding: 1rem; background: #e8f5e8; margin-bottom: 0.5rem; border-radius: 8px;">
+                                ✓ Update prices regularly to stay competitive
+                            </li>
+                            <li style="padding: 1rem; background: #e8f5e8; margin-bottom: 0.5rem; border-radius: 8px;">
+                                ✓ Respond to buyer messages within 24 hours
+                            </li>
+                            <li style="padding: 1rem; background: #e8f5e8; border-radius: 8px;">
+                                ✓ Keep your product quantities up-to-date
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>👤 My Profile</h2>
+                    </div>
+                    <form class="add-product-form" id="profileForm" onsubmit="updateProfile(event)">
+                        <div class="form-group">
+                            <label for="profileName">Full Name *</label>
+                            <input type="text" id="profileName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail">Email Address *</label>
+                            <input type="email" id="profileEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePhone">Phone Number *</label>
+                            <input type="tel" id="profilePhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileLocation">Location *</label>
+                            <select id="profileLocation" required>
+                                <option value="">Select Location</option>
+                                <option value="addis-ababa">Addis Ababa</option>
+                                <option value="dire-dawa">Dire Dawa</option>
+                                <option value="mekelle">Mekelle</option>
+                                <option value="gondar">Gondar</option>
+                                <option value="bahirdar">Bahirdar</option>
+                                <option value="hawassa">Hawassa</option>
+                                <option value="jimma">Jimma</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileFarmSize">Farm Size (hectares)</label>
+                            <input type="number" id="profileFarmSize" step="0.1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileExperience">Years of Experience</label>
+                            <input type="number" id="profileExperience" min="0">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="profileBio">About Your Farm</label>
+                            <textarea id="profileBio" rows="4" placeholder="Tell buyers about your farm and farming practices..."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <button type="submit" class="btn btn-primary">💾 Update Profile</button>
+                            <button type="button" class="btn btn-outline" onclick="loadProfile()">🔄 Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/setup-demo-data.js"></script>
+    <script src="js/farmer-dashboard.js"></script>
+</body>
+</html>

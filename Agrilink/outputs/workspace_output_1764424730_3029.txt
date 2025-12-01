@@ -1,0 +1,20 @@
+    } else if (currentUser.type === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+    }
+}
+
+// Product management functions
+function loadSampleProducts() {
+    products = [
+        {
+            id: '1',
+            title: 'Fresh Red Tomatoes',
+            category: 'vegetables',
+            price: 25,
+            quantity: '500 kg',
+            location: 'addis-ababa',
+            description: 'High-quality fresh red tomatoes grown organically in the outskirts of Addis Ababa. Perfect for restaurants and households.',
+            farmer: {
+                id: 'farmer1',
+                name: 'Abebe Kebede',
+                phone: '+251911234567',

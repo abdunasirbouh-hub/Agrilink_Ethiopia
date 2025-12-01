@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgrilinkEthiopia - Product Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c4a2e 0%, #1a7a4a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #0c4a2e;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .stats {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .stats h3 {
+            color: #0c4a2e;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid #0c4a2e;
+        }
+
+        .btn {
+            background: #0c4a2e;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1a7a4a;
+        }
+
+        .btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        #log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 AgrilinkEthiopia</h1>
+        <p class="subtitle">Product Data Generator</p>
+
+        <div class="status info" id="status">
+            Ready to generate 1,299 products across 10 categories
+        </div>
+
+        <div class="stats">
+            <h3>Target Product Counts:</h3>
+            <div class="stat-item"><span>🥬 Vegetables</span><span>15</span></div>
+            <div class="stat-item"><span>🍎 Fruits</span><span>12</span></div>
+            <div class="stat-item"><span>🌾 Grains</span><span>5</span></div>
+            <div class="stat-item"><span>🌶️ Spices</span><span>5</span></div>
+            <div class="stat-item"><span>🫘 Legumes</span><span>10</span></div>
+            <div class="stat-item"><span>🥛 Dairy</span><span>9</span></div>
+            <div class="stat-item"><span>☕ Coffee</span><span>5</span></div>
+            <div class="stat-item"><span>🥔 Tubers</span><span>5</span></div>
+            <div class="stat-item"><span>🌻 Oilseeds</span><span>4</span></div>
+            <div class="stat-item"><span>🫛 Pulses</span><span>9</span></div>
+            <div class="stat-item"><span>📦 TOTAL</span><span>79</span></div>
+        </div>
+
+        <button class="btn" id="generateBtn" onclick="generateAllProducts()">
+            ✨ Generate Products Now
+        </button>
+
+        <div id="log" style="display: none;"></div>
+    </div>
+
+    <script src="generate-products.html"></script>
+    <script>
+        function log(message) {
+            const logEl = document.getElementById('log');
+            logEl.style.display = 'block';
+            logEl.innerHTML += message + '<br>';
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function randomFrom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getPrice(category) {
+            const basePrices = {
+                vegetables: [45, 120], fruits: [60, 180], grains: [80, 250],
+                spices: [150, 500], legumes: [70, 200], dairy: [90, 300],
+                coffee: [400, 1200], tubers: [50, 150], oilseeds: [200, 600],
+                pulses: [65, 180]
+            };
+            const [min, max] = basePrices[category] || [50, 200];
+            return randomInt(min, max);
+        }
+
+        const farmers = [
+            { name: 'Abebe Kebede', rating: 4.8, location: 'addis-ababa' },
+            { name: 'Tigist Haile', rating: 4.9, location: 'hawassa' },
+            { name: 'Mulugeta Tesfaye', rating: 4.7, location: 'bahirdar' },
+            { name: 'Almaz Girma', rating: 4.9, location: 'gondar' },
+            { name: 'Dawit Bekele', rating: 4.6, location: 'dire-dawa' },
+            { name: 'Seble Worku', rating: 4.8, location: 'jimma' },
+            { name: 'Teklu Mekonnen', rating: 4.7, location: 'mekelle' },
+            { name: 'Frehiwot Asefa', rating: 4.9, location: 'ambo' },
+            { name: 'Yohannes Moges', rating: 4.8, location: 'holeta' },
+            { name: 'Rahel Desta', rating: 4.7, location: 'sebeta' }
+        ];
+
+        const productImages = {
+            vegetables: ['images/tomatoes.jpg', 'images/garlic.jpg', 'images/cabbage-sacks.jpg', 'images/carrots-sacks.jpg', 'images/broccoli.jpg', 'images/lettuce.jpg'],
+            fruits: ['images/mango.jpg', 'images/watermelon.jpg', 'images/bananas.jpg', 'images/oranges.jpg'],
+            grains: ['images/wheat-sack.jpg', 'images/rice-sack.jpg', 'images/corn-sacks.jpg'],
+            spices: ['images/chili.jpg', 'images/ginger.jpg', 'images/fenugreek.jpg'],
+            legumes: ['images/beans-variety.jpg', 'images/kidney-beans.jpg', 'images/white-beans.jpg'],
+            dairy: ['images/milk.jpg', 'images/cheese-block.jpg', 'images/eggs.jpg'],
+            coffee: ['images/coffee-beans.jpg'],
+            tubers: ['images/pumpkin.jpg'],
+            oilseeds: ['images/sunflower-seeds.jpg', 'images/niger-seed-oil.jpg'],
+            pulses: ['images/lentils.jpg', 'images/chickpeas.jpg', 'images/peas-fresh.jpg']
+        };
+
+        const productTemplates = {
+            vegetables: [
+                { names: ['Fresh Tomatoes', 'Cherry Tomatoes'], desc: 'Fresh juicy tomatoes.' },
+                { names: ['Garlic', 'Organic Garlic'], desc: 'Strong flavored garlic.' },
+                { names: ['Cabbage', 'Green Cabbage'], desc: 'Fresh crisp cabbage.' },
+                { names: ['Carrots', 'Baby Carrots'], desc: 'Sweet local carrots.' },
+                { names: ['Broccoli'], desc: 'Fresh broccoli florets.' },
+                { names: ['Lettuce', 'Romaine Lettuce'], desc: 'Crispy lettuce.' },
+                { names: ['Kale (Gomen)'], desc: 'Ethiopian kale.' },
+                { names: ['Onions', 'Red Onions'], desc: 'Fresh onions.' },
+                { names: ['Spinach'], desc: 'Leafy greens.' }
+            ],
+            fruits: [
+                { names: ['Mangoes', 'Kent Mangoes'], desc: 'Sweet tropical mangoes.' },
+                { names: ['Bananas', 'Plantains'], desc: 'Fresh local bananas.' },
+                { names: ['Oranges', 'Valencia Oranges'], desc: 'Juicy oranges.' },
+                { names: ['Papayas'], desc: 'Sweet papayas.' },
+                { names: ['Avocados'], desc: 'Creamy avocados.' }
+            ],
+            grains: [
+                { names: ['Wheat', 'Durum Wheat'], desc: 'Quality wheat grain.' },
+                { names: ['Rice', 'White Rice'], desc: 'Premium rice.' },
+                { names: ['Teff', 'White Teff'], desc: 'Ethiopian teff.' },
+                { names: ['Corn', 'Yellow Corn'], desc: 'Fresh corn.' }
+            ],
+            spices: [
+                { names: ['Red Chili', 'Berbere'], desc: 'Hot spicy peppers.' },
+                { names: ['Ginger'], desc: 'Fresh ginger root.' },
+                { names: ['Fenugreek'], desc: 'Aromatic fenugreek.' },
+                { names: ['Turmeric'], desc: 'Golden turmeric.' }
+            ],
+            legumes: [
+                { names: ['Fava Beans'], desc: 'For Ful Medames.' },
+                { names: ['Kidney Beans'], desc: 'Nutritious beans.' },
+                { names: ['White Beans'], desc: 'Mild flavored beans.' }
+            ],
+            dairy: [
+                { names: ['Fresh Milk'], desc: 'Fresh local milk.' },
+                { names: ['Cheese', 'Ayib'], desc: 'Ethiopian cheese.' },
+                { names: ['Eggs'], desc: 'Farm fresh eggs.' }
+            ],
+            coffee: [
+                { names: ['Yirgacheffe Coffee'], desc: 'Premium Yirgacheffe.' },
+                { names: ['Sidamo Coffee'], desc: 'Quality Sidamo beans.' },
+                { names: ['Harar Coffee'], desc: 'Exotic Harar coffee.' }
+            ],
+            tubers: [
+                { names: ['Potatoes'], desc: 'Fresh potatoes.' },
+                { names: ['Sweet Potatoes'], desc: 'Sweet tubers.' }
+            ],
+            oilseeds: [
+                { names: ['Niger Seed'], desc: 'Ethiopian nug seed.' },
+                { names: ['Sunflower Seeds'], desc: 'Oil-rich seeds.' }
+            ],
+            pulses: [
+                { names: ['Red Lentils', 'Misir'], desc: 'For wat and shiro.' },
+                { names: ['Chickpeas'], desc: 'For shiro.' },
+                { names: ['Green Lentils'], desc: 'Hearty lentils.' }
+            ]
+        };
+
+        function generateProducts(category, count) {
+            const products = [];
+            const templates = productTemplates[category];
+            const images = productImages[category];
+            
+            for (let i = 0; i < count; i++) {
+                const template = randomFrom(templates);
+                const productName = randomFrom(template.names);
+                const farmer = randomFrom(farmers);
+                
+                products.push({
+                    id: `${category}-${Date.now()}-${i}`,
+                    title: productName,
+                    category: category,
+                    price: getPrice(category),
+                    quantity: `${randomInt(50, 500)} kg`,
+                    description: template.desc,
+                    location: farmer.location,
+                    images: images,
+                    organic: Math.random() > 0.6,
+                    available: Math.random() > 0.1,
+                    rating: (4 + Math.random()).toFixed(1),
+                    farmer: {
+                        name: farmer.name,
+                        rating: farmer.rating,
+                        phone: `+2519${randomInt(10, 99)}${randomInt(100000, 999999)}`
+                    },
+                    status: 'approved',
+                    createdAt: new Date(Date.now() - randomInt(0, 30) * 24 * 60 * 60 * 1000).toISOString()
+                });
+            }
+            
+            return products;
+        }
+
+        function generateAllProducts() {
+            const btn = document.getElementById('generateBtn');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            status.className = 'status info';
+            status.textContent = '⏳ Generating products... Please wait...';
+            
+            log('🌾 AgrilinkEthiopia Product Generator v1.0');
+            log('================================================\n');
+            log('📦 Starting product generation...\n');
+            
+            setTimeout(() => {
+                const allProducts = [
+                    ...generateProducts('vegetables', 245),
+                    ...generateProducts('fruits', 189),
+                    ...generateProducts('grains', 156),
+                    ...generateProducts('spices', 98),
+                    ...generateProducts('legumes', 134),
+                    ...generateProducts('dairy', 67),
+                    ...generateProducts('coffee', 120),
+                    ...generateProducts('tubers', 85),
+                    ...generateProducts('oilseeds', 95),
+                    ...generateProducts('pulses', 110)
+                ];
+                
+                localStorage.setItem('agrilinkProducts', JSON.stringify(allProducts));
+                
+                log('✅ Product generation complete!\n');
+                log(`📊 Generated ${allProducts.length} products\n`);
+                log('🎉 All products saved to localStorage!');
+                log('\n🔄 Redirecting to homepage...');
+                
+                status.className = 'status success';
+                status.textContent = `✅ Success! Generated ${allProducts.length} products. Redirecting...`;
+                
+                setTimeout(() => {
+                    window.location.href = 'index-new.html';
+                }, 2000);
+            }, 500);
+        }
+    </script>
+</body>
+</html>

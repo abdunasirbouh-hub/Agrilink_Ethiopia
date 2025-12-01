@@ -1,0 +1,141 @@
+/* Privacy Consent Banner Styles */
+.consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.15);
+    padding: 25px 20px;
+    z-index: 9999;
+    border-top: 3px solid #4a7c23;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.consent-banner.show {
+    transform: translateY(0);
+}
+
+.consent-banner-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.consent-banner-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.consent-banner-content h3 {
+    color: #2d5016;
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+.consent-banner-content p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.consent-banner-content a {
+    color: #4a7c23;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.consent-banner-content a:hover {
+    color: #2d5016;
+}
+
+.consent-banner-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.consent-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.consent-btn-accept {
+    background: linear-gradient(135deg, #4a7c23 0%, #2d5016 100%);
+    color: white;
+}
+
+.consent-btn-accept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 124, 35, 0.3);
+}
+
+.consent-btn-necessary {
+    background: #fff;
+    color: #4a7c23;
+    border: 2px solid #4a7c23;
+}
+
+.consent-btn-necessary:hover {
+    background: #4a7c23;
+    color: white;
+}
+
+.consent-btn-reject {
+    background: transparent;
+    color: #666;
+    border: 2px solid #ddd;
+}
+
+.consent-btn-reject:hover {
+    background: #f8f9fa;
+    border-color: #999;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .consent-banner {
+        padding: 20px 15px;
+    }
+    
+    .consent-banner-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+    
+    .consent-banner-content {
+        min-width: auto;
+    }
+    
+    .consent-banner-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    .consent-banner-content p {
+        font-size: 0.9rem;
+    }
+    
+    .consent-banner-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .consent-btn {
+        width: 100%;
+        padding: 14px 20px;
+    }
+}

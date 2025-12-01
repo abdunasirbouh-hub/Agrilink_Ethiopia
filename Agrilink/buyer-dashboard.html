@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - AgrilinkEthiopia</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhanced-colors.css">
+    <link rel="stylesheet" href="css/animated-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico">
+    <style>
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #34495e;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .stat-card .stat-value {
+            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .section-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            color: #2c3e50;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .orders-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e1e8ed;
+        }
+        
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .order-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .order-status.new {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .order-status.processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .order-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .order-status.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .wishlist-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .wishlist-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .wishlist-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .wishlist-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .wishlist-info {
+            padding: 1.5rem;
+        }
+        
+        .wishlist-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .wishlist-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+        
+        .wishlist-farmer {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .wishlist-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h3>AgrilinkEthiopia</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">Buyer Portal</p>
+                </a>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="#dashboard" class="active" onclick="showSection('dashboard')">
+                        <img src="images/icon-growth.png" class="nav-icon" alt="Dashboard"> Dashboard
+                    </a></li>
+                    <li><a href="#browse" onclick="showSection('browse')">
+                        <img src="images/icon-products.png" class="nav-icon" alt="Browse Products"> Browse Products
+                    </a></li>
+                    <li><a href="#orders" onclick="showSection('orders')">
+                        <img src="images/icon-orders.png" class="nav-icon" alt="My Orders"> My Orders
+                    </a></li>
+                    <li><a href="#wishlist" onclick="showSection('wishlist')">
+                        <img src="images/icon-cart.png" class="nav-icon" alt="Wishlist"> Wishlist
+                    </a></li>
+                    <li><a href="#messages" onclick="showSection('messages')">
+                        <img src="images/icon-message.png" class="nav-icon" alt="Messages"> Messages
+                    </a></li>
+                    <li><a href="#profile" onclick="showSection('profile')">
+                        <img src="images/icon-user.png" class="nav-icon" alt="Profile"> Profile
+                    </a></li>
+                    <li><a href="#" onclick="logout()">
+                        <img src="images/icon-logout.png" class="nav-icon" alt="Logout"> Logout
+                    </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Welcome back, <span id="buyerName">Buyer</span>!</h1>
+                    <p>Discover fresh agricultural products from Ethiopian farmers</p>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="dashboard-section">
+                <!-- Stats Cards -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3>Total Orders</h3>
+                        <div class="stat-value" id="totalOrders">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Orders</h3>
+                        <div class="stat-value" id="activeOrders">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Spent</h3>
+                        <div class="stat-value" id="totalSpent">ETB 0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Saved Products</h3>
+                        <div class="stat-value" id="savedProducts">0</div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Recent Orders</h2>
+                        <button class="btn btn-outline" onclick="showSection('orders')">View All</button>
+                    </div>
+                    <div id="recentOrders">
+                        <!-- Recent orders will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Recommended Products -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Recommended for You</h2>
+                        <button class="btn btn-outline" onclick="showSection('browse')">Browse More</button>
+                    </div>
+                    <div id="recommendedProducts">
+                        <!-- Recommended products will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>My Orders</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="orderStatusFilter" onchange="filterOrders()">
+                            <option value="">All Status</option>
+                            <option value="new">New</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Farmer</th>
+                                <th>Total Price</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Wishlist Section -->
+            <section id="wishlist-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>My Wishlist</h2>
+                    </div>
+                    <div class="wishlist-grid" id="wishlistGrid">
+                        <!-- Wishlist items will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>📧 Messages</h2>
+                    </div>
+                    <div style="padding: 2rem; text-align: center; color: #666;">
+                        <img src="images/icon-message.png" alt="Messages" style="width: 80px; height: 80px; margin-bottom: 1rem; opacity: 0.5;">
+                        <h3>No Messages Yet</h3>
+                        <p>When you contact farmers about their products, your conversations will appear here.</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem;">💡 Tip: Browse products and contact farmers to start a conversation!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!--  Profile Section -->
+            <section id="profile-section" class="dashboard-section" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>👤 My Profile</h2>
+                    </div>
+                    <form style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;" id="buyerProfileForm" onsubmit="updateBuyerProfile(event)">
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #2c3e50;">Full Name *</label>
+                            <input type="text" id="buyerProfileName" required style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px; outline: none; font-size: 1rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #2c3e50;">Email Address *</label>
+                            <input type="email" id="buyerProfileEmail" required style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px; outline: none; font-size: 1rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #2c3e50;">Phone Number *</label>
+                            <input type="tel" id="buyerProfilePhone" required style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px; outline: none; font-size: 1rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #2c3e50;">Location *</label>
+                            <select id="buyerProfileLocation" required style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px; outline: none; font-size: 1rem;">
+                                <option value="">Select Location</option>
+                                <option value="addis-ababa">Addis Ababa</option>
+                                <option value="dire-dawa">Dire Dawa</option>
+                                <option value="mekelle">Mek elle</option>
+                                <option value="gondar">Gondar</option>
+                                <option value="bahirdar">Bahirdar</option>
+                                <option value="hawassa">Hawassa</option>
+                                <option value="jimma">Jimma</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1rem; grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #2c3e50;">Business Name (Optional)</label>
+                            <input type="text" id="buyerBusinessName" style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px; outline: none; font-size: 1rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem; grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #2c3e50;">Delivery Address</label>
+                            <textarea id="buyerAddress" rows="3" style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px; outline: none; font-size: 1rem; resize: vertical;" placeholder="Enter your delivery address..."></textarea>
+                        </div>
+                        <div style="margin-bottom: 1rem; grid-column: 1 / -1;">
+                            <button type="submit" class="btn btn-primary">💾 Update Profile</button>
+                            <button type="button" class="btn btn-outline" onclick="loadBuyerProfile()">🔄 Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/setup-demo-data.js"></script>
+    <script src="js/buyer-dashboard.js"></script>
+</body>
+</html>

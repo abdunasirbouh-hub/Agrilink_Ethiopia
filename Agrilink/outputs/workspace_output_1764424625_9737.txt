@@ -1,0 +1,1011 @@
+// AgrilinkEthiopia - Agricultural Marketplace JavaScript
+
+// Global variables
+let currentUser = null;
+let products = [];
+let filteredProducts = [];
+let currentPage = 1;
+const productsPerPage = 12;
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    loadSampleProducts();
+    setupEventListeners();
+    setupDraggableModals();
+});
+
+// Draggable Modal Functionality
+function setupDraggableModals() {
+    const draggables = document.querySelectorAll('.draggable-modal');
+    
+    draggables.forEach(draggable => {
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+        
+        const dragHeader = draggable.querySelector('.modal-drag-header');
+        
+        dragHeader.addEventListener('mousedown', dragStart);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+        
+        function dragStart(e) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            
+            if (e.target === dragHeader || dragHeader.contains(e.target)) {
+                isDragging = true;
+            }
+        }
+        
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                
+                xOffset = currentX;
+                yOffset = currentY;
+                
+                draggable.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+        }
+        
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+    });
+}
+
+// Toggle Farmer Fields in Signup
+function toggleFarmerFields() {
+    const userType = document.querySelector('input[name="userType"]:checked').value;
+    const profilePictureGroup = document.getElementById('profilePictureGroup');
+    const farmInfoGroup = document.getElementById('farmInfoGroup');
+    const experienceGroup = document.getElementById('experienceGroup');
+    
+    if (userType === 'farmer') {
+        profilePictureGroup.style.display = 'block';
+        farmInfoGroup.style.display = 'block';
+        experienceGroup.style.display = 'block';
+    } else {
+        profilePictureGroup.style.display = 'none';
+        farmInfoGroup.style.display = 'none';
+        experienceGroup.style.display = 'none';
+    }
+}
+
+// Preview Profile Image
+function previewProfileImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('profilePreview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `<img src="${e.target.result}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">`;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function initializeApp() {
+    // Check if user is logged in
+    const savedUser = localStorage.getItem('agrilinkUser');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        updateUIForLoggedInUser();
+    }
+    
+    // Load products from localStorage or use sample data
+    const savedProducts = localStorage.getItem('agrilinkProducts');
+    if (savedProducts) {
+        products = JSON.parse(savedProducts);
+    } else {
+        loadSampleProducts();
+    }
+    
+    // Display initial products
+    displayProducts();
+}
+
+function setupEventListeners() {
+    // Mobile menu toggle
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', toggleMobileMenu);
+    }
+    
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', debounce(searchProducts, 300));
+    }
+    
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            closeAllModals();
+        }
+    });
+    
+    // Form validation
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!validateForm(this)) {
+                e.preventDefault();
+            }
+        });
+    });
+}
+
+// Mobile menu functionality
+function toggleMobileMenu() {
+    const navMenu = document.querySelector('.nav-menu');
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (navMenu.style.display === 'flex') {
+        navMenu.style.display = 'none';
+        mobileToggle.classList.remove('active');
+    } else {
+        navMenu.style.display = 'flex';
+        navMenu.style.position = 'absolute';
+        navMenu.style.top = '100%';
+        navMenu.style.left = '0';
+        navMenu.style.right = '0';
+        navMenu.style.background = 'white';
+        navMenu.style.flexDirection = 'column';
+        navMenu.style.padding = '1rem';
+        navMenu.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+        mobileToggle.classList.add('active');
+    }
+}
+
+// Modal functionality
+function showLoginModal() {
+    document.getElementById('loginModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function showSignupModal() {
+    document.getElementById('signupModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function closeAllModals() {
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = 'none';
+    });
+    document.body.style.overflow = 'auto';
+}
+
+function switchToSignup() {
+    closeModal('loginModal');
+    showSignupModal();
+}
+
+function switchToLogin() {
+    closeModal('signupModal');
+    showLoginModal();
+}
+
+// Authentication functions
+function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    // Simulate authentication (in real app, this would be an API call)
+    const users = JSON.parse(localStorage.getItem('agrilinkUsers') || '[]');
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        localStorage.setItem('agrilinkUser', JSON.stringify(user));
+        updateUIForLoggedInUser();
+        closeAllModals();
+        showNotification('Login successful! Welcome back.', 'success');
+        
+        // Redirect based on user type
+        if (user.type === 'farmer') {
+            setTimeout(() => {
+                window.location.href = 'farmer-dashboard.html';
+            }, 1500);
+        } else if (user.type === 'admin') {
+            setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+            }, 1500);
+        }
+    } else {
+        showNotification('Invalid email or password. Please try again.', 'error');
+    }
+}
+
+function handleSignup(event) {
+    event.preventDefault();
+    
+    const userType = document.querySelector('input[name="userType"]:checked').value;
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const phone = document.getElementById('signupPhone').value;
+    const location = document.getElementById('signupLocation').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    
+    // Get profile picture if farmer
+    let profilePicture = null;
+    if (userType === 'farmer') {
+        const profileImage = document.querySelector('#profilePreview img');
+        if (profileImage) {
+            profilePicture = profileImage.src;
+        }
+    }
+    
+    // Get additional farmer info
+    let farmSize = null;
+    let experience = null;
+    if (userType === 'farmer') {
+        farmSize = document.getElementById('farmSize').value;
+        experience = document.getElementById('experience').value;
+    }
+    
+    // Validation
+    if (password !== confirmPassword) {
+        showNotification('Passwords do not match. Please try again.', 'error');
+        return;
+    }
+    
+    // Check if user already exists
+    const users = JSON.parse(localStorage.getItem('agrilinkUsers') || '[]');
+    if (users.find(u => u.email === email)) {
+        showNotification('An account with this email already exists.', 'error');
+        return;
+    }
+    
+    // Create new user
+    const newUser = {
+        id: Date.now().toString(),
+        type: userType,
+        name: name,
+        email: email,
+        phone: phone,
+        location: location,
+        password: password,
+        approved: userType === 'buyer' ? true : false, // Buyers are auto-approved, farmers need admin approval
+        profilePicture: profilePicture,
+        farmSize: farmSize,
+        experience: experience,
+        createdAt: new Date().toISOString()
+    };
+    
+    users.push(newUser);
+    localStorage.setItem('agrilinkUsers', JSON.stringify(users));
+    
+    showNotification('Account created successfully! Please check your email for verification.', 'success');
+    
+    // For farmers, show waiting for approval message
+    if (userType === 'farmer') {
+        showNotification('Your farmer account is pending admin approval. You will be notified once approved.', 'info');
+    }
+    
+    // Clear form and switch to login
+    document.getElementById('signupForm').reset();
+    document.getElementById('profilePreview').innerHTML = '<span style="font-size: 3rem;">👤</span>';
+    setTimeout(() => {
+        switchToLogin();
+    }, 2000);
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('agrilinkUser');
+    updateUIForLoggedOutUser();
+    showNotification('You have been logged out successfully.', 'success');
+    window.location.href = 'index.html';
+}
+
+function updateUIForLoggedInUser() {
+    const navActions = document.querySelector('.nav-actions');
+    if (navActions && currentUser) {
+        navActions.innerHTML = `
+            <span class="welcome-message">Welcome, ${currentUser.name}</span>
+            <button class="btn btn-outline" onclick="goToDashboard()">Dashboard</button>
+            <button class="btn btn-primary" onclick="logout()">Logout</button>
+        `;
+    }
+}
+
+function updateUIForLoggedOutUser() {
+    const navActions = document.querySelector('.nav-actions');
+    if (navActions) {
+        navActions.innerHTML = `
+            <button class="btn btn-outline" onclick="showLoginModal()">Login</button>
+            <button class="btn btn-primary" onclick="showSignupModal()">Sign Up</button>
+        `;
+    }
+}
+
+function goToDashboard() {
+    if (currentUser.type === 'farmer') {
+        window.location.href = 'farmer-dashboard.html';
+    } else if (currentUser.type === 'buyer') {
+        window.location.href = 'buyer-dashboard.html';
+    } else if (currentUser.type === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+    }
+}
+
+// Product management functions
+function loadSampleProducts() {
+    products = [
+        {
+            id: '1',
+            title: 'Fresh Red Tomatoes',
+            category: 'vegetables',
+            price: 25,
+            quantity: '500 kg',
+            location: 'addis-ababa',
+            description: 'High-quality fresh red tomatoes grown organically in the outskirts of Addis Ababa. Perfect for restaurants and households.',
+            farmer: {
+                id: 'farmer1',
+                name: 'Abebe Kebede',
+                phone: '+251911234567',
+                rating: 4.8
+            },
+            images: ['https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-15',
+            available: true,
+            organic: true
+        },
+        {
+            id: '2',
+            title: 'Organic Potatoes',
+            category: 'vegetables',
+            price: 18,
+            quantity: '1 ton',
+            location: 'mekelle',
+            description: 'Premium quality organic potatoes, suitable for frying and boiling. Grown in the fertile lands of Tigray region.',
+            farmer: {
+                id: 'farmer2',
+                name: 'Tigist Haile',
+                phone: '+251922345678',
+                rating: 4.9
+            },
+            images: ['https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-14',
+            available: true,
+            organic: true
+        },
+        {
+            id: '3',
+            title: 'Fresh Onions',
+            category: 'vegetables',
+            price: 20,
+            quantity: '750 kg',
+            location: 'bahirdar',
+            description: 'Large, fresh onions perfect for cooking and commercial use. Grown in the Amhara region.',
+            farmer: {
+                id: 'farmer3',
+                name: 'Mohammed Ali',
+                phone: '+251933456789',
+                rating: 4.7
+            },
+            images: ['https://images.unsplash.com/photo-1524593166156-3e0c51e5f8e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-13',
+            available: true,
+            organic: false
+        },
+        {
+            id: '4',
+            title: 'Premium Coffee Beans',
+            category: 'spices',
+            price: 120,
+            quantity: '200 kg',
+            location: 'hawassa',
+            description: 'Premium Ethiopian coffee beans from the Sidamo region. Rich flavor and aroma, roasted to perfection.',
+            farmer: {
+                id: 'farmer4',
+                name: 'Chala Lemma',
+                phone: '+251944567890',
+                rating: 4.9
+            },
+            images: ['https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-12',
+            available: true,
+            organic: true
+        },
+        {
+            id: '5',
+            title: 'Fresh Mangoes',
+            category: 'fruits',
+            price: 35,
+            quantity: '300 kg',
+            location: 'dire-dawa',
+            description: 'Sweet and juicy tropical mangoes, perfect for fresh consumption or juice production.',
+            farmer: {
+                id: 'farmer5',
+                name: 'Fatuma Ahmed',
+                phone: '+251955678901',
+                rating: 4.8
+            },
+            images: ['https://images.unsplash.com/photo-1553279768-865429fa0078?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-11',
+            available: true,
+            organic: false
+        },
+        {
+            id: '6',
+            title: 'Teff White',
+            category: 'grains',
+            price: 45,
+            quantity: '2 tons',
+            location: 'gondar',
+            description: 'Premium white teff, perfect for injera preparation. Grown in the highlands of Gondar.',
+            farmer: {
+                id: 'farmer6',
+                name: 'Dawit Bekele',
+                phone: '+251966789012',
+                rating: 4.9
+            },
+            images: ['https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-10',
+            available: true,
+            organic: true
+        },
+        {
+            id: '7',
+            title: 'Fresh Carrots',
+            category: 'vegetables',
+            price: 22,
+            quantity: '400 kg',
+            location: 'addis-ababa',
+            description: 'Fresh, crunchy carrots rich in vitamins. Perfect for salads and cooking.',
+            farmer: {
+                id: 'farmer1',
+                name: 'Abebe Kebede',
+                phone: '+251911234567',
+                rating: 4.8
+            },
+            images: ['https://images.unsplash.com/photo-1445282768818-728615cc910a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-09',
+            available: true,
+            organic: false
+        },
+        {
+            id: '8',
+            title: 'Bananas',
+            category: 'fruits',
+            price: 28,
+            quantity: '600 kg',
+            location: 'hawassa',
+            description: 'Sweet bananas from the southern region. Perfect for breakfast and snacks.',
+            farmer: {
+                id: 'farmer4',
+                name: 'Chala Lemma',
+                phone: '+251944567890',
+                rating: 4.9
+            },
+            images: ['https://images.unsplash.com/photo-1563736408213-4a5e9b72b977?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-08',
+            available: true,
+            organic: false
+        },
+        {
+            id: '9',
+            title: 'Lentils Red',
+            category: 'legumes',
+            price: 32,
+            quantity: '800 kg',
+            location: 'mekelle',
+            description: 'High-quality red lentils, perfect for Ethiopian traditional dishes.',
+            farmer: {
+                id: 'farmer2',
+                name: 'Tigist Haile',
+                phone: '+251922345678',
+                rating: 4.9
+            },
+            images: ['https://images.unsplash.com/photo-1471197354225-eb5255267c62?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-07',
+            available: true,
+            organic: true
+        },
+        {
+            id: '10',
+            title: 'Fresh Milk',
+            category: 'dairy',
+            price: 15,
+            quantity: '100 liters/day',
+            location: 'bahirdar',
+            description: 'Fresh cow milk delivered daily from local farms around Lake Tana.',
+            farmer: {
+                id: 'farmer3',
+                name: 'Mohammed Ali',
+                phone: '+251933456789',
+                rating: 4.7
+            },
+            images: ['https://images.unsplash.com/photo-1550583724-b2692b85b150?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-06',
+            available: true,
+            organic: false
+        },
+        {
+            id: '11',
+            title: 'Berbere Spice',
+            category: 'spices',
+            price: 85,
+            quantity: '150 kg',
+            location: 'dire-dawa',
+            description: 'Authentic Ethiopian berbere spice blend, made with traditional ingredients.',
+            farmer: {
+                id: 'farmer5',
+                name: 'Fatuma Ahmed',
+                phone: '+251955678901',
+                rating: 4.8
+            },
+            images: ['https://images.unsplash.com/photo-1517438124226-b2b2cd02cab3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-05',
+            available: true,
+            organic: false
+        },
+        {
+            id: '12',
+            title: 'Fresh Strawberries',
+            category: 'fruits',
+            price: 55,
+            quantity: '50 kg',
+            location: 'addis-ababa',
+            description: 'Sweet and fresh strawberries grown in controlled greenhouse conditions.',
+            farmer: {
+                id: 'farmer1',
+                name: 'Abebe Kebede',
+                phone: '+251911234567',
+                rating: 4.8
+            },
+            images: ['https://images.unsplash.com/photo-1464965911861-746a04b4bca6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'],
+            postedDate: '2024-01-04',
+            available: true,
+            organic: true
+        }
+    ];
+    
+    // Save to localStorage
+    localStorage.setItem('agrilinkProducts', JSON.stringify(products));
+    filteredProducts = [...products];
+}
+
+function displayProducts(productsToShow = filteredProducts) {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+    
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const productsToDisplay = productsToShow.slice(startIndex, endIndex);
+    
+    if (productsToDisplay.length === 0) {
+        productsGrid.innerHTML = `
+            <div class="no-products">
+                <h3>No products found</h3>
+                <p>Try adjusting your search criteria or browse all products.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    productsGrid.innerHTML = productsToDisplay.map(product => `
+        <div class="product-card" onclick="viewProduct('${product.id}')">
+            <div class="product-image">
+                <img src="${product.images[0]}" alt="${product.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300/104862/ffffff?text=AgrilinkEthiopia'">
+                ${product.organic ? '<span class="product-badge">Organic</span>' : ''}
+                ${!product.available ? '<span class="product-badge" style="background: #e74c3c;">Out of Stock</span>' : ''}
+            </div>
+            <div class="product-info">
+                <h3 class="product-title">${product.title}</h3>
+                <p class="product-category">${getCategoryDisplayName(product.category)}</p>
+                <div class="product-price">ETB ${product.price}/kg</div>
+                <p class="product-quantity">Available: ${product.quantity}</p>
+                <p class="product-location">📍 ${getLocationDisplayName(product.location)}</p>
+                <div class="product-farmer">
+                    <div class="farmer-avatar">${product.farmer.name.charAt(0)}</div>
+                    <div>
+                        <div class="farmer-name">${product.farmer.name}</div>
+                        <div class="farmer-rating">⭐ ${product.farmer.rating}</div>
+                    </div>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary btn-small" onclick="contactFarmer('${product.id}', event)">Contact Farmer</button>
+                    <button class="btn btn-outline btn-small" onclick="viewProduct('${product.id}', event)">View Details</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    // Lazy loading for images
+    lazyLoadImages();
+}
+
+function viewProduct(productId, event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    
+    // Store the selected product in sessionStorage
+    const product = products.find(p => p.id === productId);
+    if (product) {
+        sessionStorage.setItem('selectedProduct', JSON.stringify(product));
+        window.location.href = 'product-detail.html';
+    }
+}
+
+function contactFarmer(productId, event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    
+    const product = products.find(p => p.id === productId);
+    if (product) {
+        if (currentUser) {
+            // Show contact modal or redirect to messaging
+            showContactModal(product);
+        } else {
+            showNotification('Please login to contact farmers.', 'info');
+            showLoginModal();
+        }
+    }
+}
+
+function showContactModal(product) {
+    // Create contact modal dynamically
+    const modalHtml = `
+        <div id="contactModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('contactModal')">&times;</span>
+                <h2>Contact Farmer</h2>
+                <div class="farmer-details">
+                    <h3>${product.farmer.name}</h3>
+                    <p><strong>Phone:</strong> ${product.farmer.phone}</p>
+                    <p><strong>Product:</strong> ${product.title}</p>
+                    <p><strong>Location:</strong> ${getLocationDisplayName(product.location)}</p>
+                    <p><strong>Available Quantity:</strong> ${product.quantity}</p>
+                    <p><strong>Price:</strong> ETB ${product.price}/kg</p>
+                </div>
+                <div class="contact-options">
+                    <button class="btn btn-primary btn-full" onclick="makePhoneCall('${product.farmer.phone}')">
+                        📞 Call Now
+                    </button>
+                    <button class="btn btn-outline btn-full" onclick="sendWhatsApp('${product.farmer.phone}', '${product.title}')">
+                        💬 Send WhatsApp
+                    </button>
+                    <button class="btn btn-outline btn-full" onclick="sendEmail('${product.farmer.email}', '${product.title}')">
+                        ✉️ Send Email
+                    </button>
+                </div>
+                <div class="mobile-money-section">
+                    <h4>Payment Options</h4>
+                    <p>This farmer accepts:</p>
+                    <div class="payment-methods">
+                        <span class="payment-method">📱 TeleBirr</span>
+                        <span class="payment-method">📱 CBE Birr</span>
+                        <span class="payment-method">💵 Cash on Delivery</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing contact modal if any
+    const existingModal = document.getElementById('contactModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add new modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.getElementById('contactModal').style.display = 'block';
+}
+
+function makePhoneCall(phoneNumber) {
+    window.location.href = `tel:${phoneNumber}`;
+}
+
+function sendWhatsApp(phoneNumber, productName) {
+    const message = `Hi, I'm interested in your ${productName} listed on AgrilinkEthiopia. Is it still available?`;
+    window.open(`https://wa.me/${phoneNumber.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function sendEmail(email, productName) {
+    const subject = `Inquiry about ${productName} - AgrilinkEthiopia`;
+    const body = `Hello,\n\nI'm interested in your ${productName} listed on AgrilinkEthiopia. Could you please provide more information about availability and pricing?\n\nThank you.`;
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// Search and filter functions
+function searchProducts() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    if (searchTerm === '') {
+        filteredProducts = [...products];
+    } else {
+        filteredProducts = products.filter(product => 
+            product.title.toLowerCase().includes(searchTerm) ||
+            product.description.toLowerCase().includes(searchTerm) ||
+            product.category.toLowerCase().includes(searchTerm) ||
+            product.farmer.name.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    currentPage = 1;
+    displayProducts();
+}
+
+function filterByCategory(category) {
+    filteredProducts = products.filter(product => product.category === category);
+    currentPage = 1;
+    displayProducts();
+    
+    // Scroll to products section
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+}
+
+function filterByLocation() {
+    const location = document.getElementById('locationFilter').value;
+    
+    if (location === '') {
+        filteredProducts = [...products];
+    } else {
+        filteredProducts = products.filter(product => product.location === location);
+    }
+    
+    currentPage = 1;
+    displayProducts();
+}
+
+function sortProducts() {
+    const sortBy = document.getElementById('sortFilter').value;
+    
+    switch(sortBy) {
+        case 'price-low':
+            filteredProducts.sort((a, b) => a.price - b.price);
+            break;
+        case 'price-high':
+            filteredProducts.sort((a, b) => b.price - a.price);
+            break;
+        case 'newest':
+        default:
+            filteredProducts.sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
+            break;
+    }
+    
+    displayProducts();
+}
+
+function loadMoreProducts() {
+    currentPage++;
+    displayProducts();
+}
+
+// Utility functions
+function getCategoryDisplayName(category) {
+    const categoryNames = {
+        'vegetables': 'Vegetables',
+        'fruits': 'Fruits',
+        'grains': 'Grains',
+        'spices': 'Spices',
+        'legumes': 'Legumes',
+        'dairy': 'Dairy Products'
+    };
+    return categoryNames[category] || category;
+}
+
+function getLocationDisplayName(location) {
+    const locationNames = {
+        'addis-ababa': 'Addis Ababa',
+        'dire-dawa': 'Dire Dawa',
+        'mekelle': 'Mekelle',
+        'gondar': 'Gondar',
+        'bahirdar': 'Bahirdar',
+        'hawassa': 'Hawassa'
+    };
+    return locationNames[location] || location;
+}
+
+function scrollToProducts() {
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `${type}-message notification`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        padding: 16px 24px;
+        border-radius: 8px;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    // Add to body
+    document.body.appendChild(notification);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 5000);
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function validateForm(form) {
+    let isValid = true;
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.style.borderColor = '#e74c3c';
+            isValid = false;
+        } else {
+            input.style.borderColor = '#e1e8ed';
+        }
+    });
+    
+    if (!isValid) {
+        showNotification('Please fill in all required fields.', 'error');
+    }
+    
+    return isValid;
+}
+
+function lazyLoadImages() {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.classList.add('loaded');
+                observer.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .no-products {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+    
+    .welcome-message {
+        display: flex;
+        align-items: center;
+        margin-right: 1rem;
+        font-weight: 500;
+        color: #666;
+    }
+    
+    .farmer-details {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .farmer-details h3 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    
+    .farmer-details p {
+        margin-bottom: 0.5rem;
+        color: #666;
+    }
+    
+    .contact-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .mobile-money-section {
+        background: #e8f5e8;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .mobile-money-section h4 {
+        color: #27ae60;
+        margin-bottom: 0.5rem;
+    }
+    
+    .payment-methods {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+    
+    .payment-method {
+        background: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        border: 1px solid #27ae60;
+    }
+`;
+document.head.appendChild(style);
